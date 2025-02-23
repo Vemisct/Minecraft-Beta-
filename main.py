@@ -11,4 +11,4 @@ class Game(ShowBase):
         self.hero = Hero((0, 10, 2), self.land)
         
 game = Game()
-game.run()        
+game.run()

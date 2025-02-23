@@ -32,7 +32,8 @@ class Hero:
         base.accept('q', self.ChangeMode)
         base.accept('b', self.Build)
         base.accept('r', self.Destroy)
-
+        base.accept('c', self.land.SaveMap)
+        base.accept('v', self.land.LoadMap)
 
     def FirstMode(self):
         base.disableMouse()
@@ -142,12 +143,12 @@ class Hero:
         if self.mode:
             self.land.AddBlock(pos, self.land.t)
         else:
-            self.land.BlockBuild(pos)
+            self.land.BlockBuild(pos, self.land.t)
 
     def Destroy(self):
         angle = (self.hero.getH()) % 360
         pos = self.LookAt(angle)
-        if self.land.Empty(pos):
+        if self.mode:
             self.land.BlockDestroy(pos)
         else:
             self.land.BlockDsFrom(pos)

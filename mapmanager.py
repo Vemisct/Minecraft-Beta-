@@ -1,3 +1,5 @@
+from pickle import dump, load
+
 class Mapmanager:
     
     def __init__(self):
@@ -50,11 +52,11 @@ class Mapmanager:
     def FindBlocks(self, pos):
         return self.land.findAllMatches('=Bl=' + str(pos))
     
-    def BlockBuild(self, pos):
+    def BlockBuild(self, pos, t):
         x, y, z = pos
         new_bl = self.FindEmpty(pos)
-        if new_bl <= z + 1:
-            self.AddBlock(pos, t=self.t) 
+        if new_bl[2] <= z + 1:
+            self.AddBlock(new_bl, t=self.t) 
 
     def BlockDestroy(self, pos):
         blocks = self.FindBlocks(pos)
@@ -67,3 +69,22 @@ class Mapmanager:
         blocks = self.FindBlocks(pos)
         for block in blocks:
             block.removeNode()
+
+    def SaveMap(self):
+        blocks = self.land.getChildren()
+        with open('my_Bind', 'wb') as f:
+            dump(len(blocks), f)
+            for block in blocks:
+                x, y, z = block.getPos()
+                pos = (int(x), int(y), int(z))
+                dump(pos, f)
+                dump(block.getTexture(), f)
+                
+    def LoadMap(self):
+        self.Clear()
+        with open('my_bind', 'rb') as f:
+            blocks_count = load(f)
+            for i in range(blocks_count):
+                pos = load(f)
+                texture = load(f)
+                self.AddBlock(pos, t=texture)
