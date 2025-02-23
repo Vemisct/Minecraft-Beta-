@@ -11,11 +11,15 @@ class Hero:
         self.Events()
 
     def Events(self):
-        base.accept('m', self.ChangeCameraMode)
+        base.accept('tab', self.ChangeCameraMode)
         base.accept('l', self.turnL)
         base.accept('l' + '-repeat', self.turnL)
         base.accept('k', self.turnR)
         base.accept('k' + '-repeat', self.turnR)
+        base.accept('control', self.turnUp)
+        base.accept('control' + '-repeat', self.turnUp)
+        base.accept('shift', self.turnDown)
+        base.accept('shift' + '-repeat', self.turnDown)
         base.accept('w', self.F)
         base.accept('w' + '-repeat', self.F)
         base.accept('s', self.B)
@@ -28,12 +32,19 @@ class Hero:
         base.accept('u' + '-repeat', self.Up)
         base.accept('i', self.Down)
         base.accept('i' + '-repeat', self.Down)
-        #base.accept('j', self.Jump)
-        base.accept('q', self.ChangeMode)
+        #base.accept('space', self.Jump)
+        base.accept('caps_lock', self.ChangeMode)
         base.accept('b', self.Build)
         base.accept('r', self.Destroy)
         base.accept('c', self.land.SaveMap)
         base.accept('v', self.land.LoadMap)
+        base.accept('1', self.land.TWater)
+        base.accept('2', self.land.TEarth)
+        base.accept('3', self.land.TGrass)
+        base.accept('4', self.land.TBricks)
+        base.accept('5', self.land.TCobblestone)
+        base.accept('6', self.land.TTree)
+        base.accept('7', self.land.TFoliage)
 
     def FirstMode(self):
         base.disableMouse()
@@ -60,6 +71,12 @@ class Hero:
 
     def turnR(self):
         self.hero.setH((self.hero.getH() - 5) % 360)
+
+    def turnUp(self):
+        self.hero.setP((self.hero.getP() + 5) % 360)
+    
+    def turnDown(self):
+        self.hero.setP((self.hero.getP() - 5) % 360)
 
     def FreeMove(self, angle):
         pos = self.LookAt(angle)

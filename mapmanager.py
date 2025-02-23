@@ -4,8 +4,29 @@ class Mapmanager:
     
     def __init__(self):
         self.modell = 'models/block.egg'
-        self.t = loader.loadTexture('textures/stone_bricks.png')
+        self.t = loader.loadTexture('textures/green_earth.png')
         self.Start_new()
+
+    def TWater(self):
+        self.t = loader.loadTexture('textures/water.png')
+
+    def TTree(self):
+        self.t = loader.loadTexture('textures/tree.png')
+
+    def TEarth(self):
+        self.t = loader.loadTexture('textures/earth.png')
+
+    def TFoliage(self):
+        self.t = loader.loadTexture('textures/foliage.png')
+
+    def TGrass(self):
+        self.t = loader.loadTexture('textures/green_earth.png')
+
+    def TCobblestone(self):
+        self.t = loader.loadTexture('textures/cobblestone.png')
+
+    def TBricks(self):
+        self.t = loader.loadTexture('textures/stone_bricks.png')
 
     def Start_new(self):
         self.land = render.attachNewNode('Land')
