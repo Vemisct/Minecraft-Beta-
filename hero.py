@@ -1,3 +1,5 @@
+from direct.task import Task
+
 class Hero:
 
     def __init__(self, pos, land):
@@ -9,6 +11,11 @@ class Hero:
         self.mode = True
         self.FirstMode()
         self.Events()
+        self.Is_Jump = False
+        self.JumpSpeed = 0.3
+        self.Gravity = 0.02
+        self.JumpVelocity = 0
+        self.stepS = loader.loadSfx('Voicy_Step4 - polarbear.mp3')
 
     def Events(self):
         base.accept('tab', self.ChangeCameraMode)
@@ -32,7 +39,7 @@ class Hero:
         base.accept('u' + '-repeat', self.Up)
         base.accept('i', self.Down)
         base.accept('i' + '-repeat', self.Down)
-        #base.accept('space', self.Jump)
+        base.accept('space', self.Jump)
         base.accept('caps_lock', self.ChangeMode)
         base.accept('b', self.Build)
         base.accept('r', self.Destroy)
@@ -87,10 +94,6 @@ class Hero:
         if self.land.Empty(pos):
             pos = self.land.FindEmpty(pos)
             self.hero.setPos(pos)
-        else:
-            pos = pos[0], pos[1], pos[2]+1 
-            if self.land.Empty(pos):
-                self.hero.setPos(pos)
         
     def LookAt(self, angle):
         fx, fy, fz = list(map(int, self.hero.getPos()))
@@ -122,6 +125,8 @@ class Hero:
             self.FreeMove(angle)
         else:
             self.FirstMove(angle)
+        if not self.stepS.status() == self.stepS.PLAYING:  
+            self.stepS.play()
             
     def F(self):
         angle = (self.hero.getH()) % 360
@@ -146,7 +151,9 @@ class Hero:
         self.hero.setZ(self.hero.getZ() - 1)
 
     def Jump(self):
-        pass
+        if not self.Is_Jump:
+            self.Is_Jump = True
+            self.JumpVelocity = self.JumpSpeed
     
     def ChangeMode(self):
         if self.mode == True:
@@ -169,3 +176,18 @@ class Hero:
             self.land.BlockDestroy(pos)
         else:
             self.land.BlockDsFrom(pos)
+
+    def Update(self, task):
+        if self.mode == False:
+            pos = self.hero.getPos()
+            if self.Is_Jump:
+                pos.z += self.JumpVelocity
+                self.JumpVelocity -= self.Gravity
+                ground = self.land.FindEmpty(map(int, pos))
+                if pos.z <= ground[2]:
+                    pos.z = ground[2]
+                    self.Is_Jump = False
+                    self.JumpVelocity = 0
+                self.hero.setPos(pos)
+        return Task.cont
+    
